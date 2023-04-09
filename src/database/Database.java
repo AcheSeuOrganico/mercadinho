@@ -1,6 +1,4 @@
 package database;
-import java.util.Map;
-import java.util.HashMap;
 import java.sql.Connection;
 import java.sql.SQLException;
 import java.sql.Statement;
@@ -13,6 +11,20 @@ public class Database {
     public Database(Connection connection){
         this.connection = connection;
     }
+    
+    public int countAll(String table){
+        try (Statement statement = this.connection.createStatement()){
+            ResultSet rs = statement.executeQuery(String.format("SELECT COUNT(*) FROM %s;", table));
+            
+            int total = 0;
+            while(rs.next()){
+                total = rs.getInt(1);
+            }
+            return total;
+        }catch (SQLException e) {
+            throw new IllegalStateException("SQL Error", e);
+        }
+    }
         
     public String[][] selectAll(String table) {
         try (Statement statement = this.connection.createStatement()) {
@@ -20,8 +32,9 @@ public class Database {
                 ResultSetMetaData rsmd = rs.getMetaData();
                 
                 int numeroColunas = rsmd.getColumnCount();
-                String[][] results = new String[2][numeroColunas];
-                
+                int numeroLinhas = this.countAll(table);
+                String[][] results = new String[numeroLinhas][numeroColunas];
+
                 while(rs.next()){
                     for (String[] result : results) {
                         for (int j = 1; j <= numeroColunas; j++) {
