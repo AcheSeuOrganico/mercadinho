@@ -2,10 +2,9 @@ package mercadinhodoze;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
-import database.Database;
-import java.sql.ResultSet;
 
-import views.AbstractView;
+import controllers.ProdutoController;
+
 
 public class MercadinhoDoZe {
 
@@ -16,13 +15,10 @@ public class MercadinhoDoZe {
 
        try (Connection connection = DriverManager.getConnection(url, username, password)) {
         
-        Database db = new Database(connection);
-        ResultSet rs = db.selectAll("teste");
-        AbstractView.displayTable(rs);
-       
+        ProdutoController.listaProdutos(connection);
+        
        } catch (SQLException e) {
             throw new IllegalStateException("SQL Error", e);
-       
        }
     }    
 }
