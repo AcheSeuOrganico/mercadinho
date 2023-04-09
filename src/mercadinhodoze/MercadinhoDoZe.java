@@ -9,7 +9,7 @@ import controllers.ProdutoController;
 public class MercadinhoDoZe {
 
     public static void main(String[] args) {
-       String url = "jdbc:mysql://localhost:3306/teste";
+       String url = "jdbc:mysql://localhost:3306/mercadinho";
        String username = "root";
        String password = "";
 

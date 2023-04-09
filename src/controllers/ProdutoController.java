@@ -9,7 +9,7 @@ public class ProdutoController extends AbstractController{
 
     public static void listaProdutos(Connection connection) throws SQLException{
         Database db = new Database(connection);
-        String[][] result = db.selectAll("teste");
+        String[][] result = db.selectAll("produto");
         AbstractView.displayTable(result);
     }
     

@@ -35,11 +35,9 @@ public class Database {
                 int numeroLinhas = this.countAll(table);
                 String[][] results = new String[numeroLinhas][numeroColunas];
 
-                while(rs.next()){
-                    for (String[] result : results) {
-                        for (int j = 1; j <= numeroColunas; j++) {
-                            result[j - 1] = rs.getString(j);
-                        }
+               while(rs.next()){
+                    for(int i=1; i<=numeroColunas; i++){
+                        results[rs.getRow()-1][i-1] = rs.getString(i);
                     }
                 }
             return results;
