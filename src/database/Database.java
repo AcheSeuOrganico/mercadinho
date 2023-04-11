@@ -21,27 +21,49 @@ public class Database {
                 total = rs.getInt(1);
             }
             return total;
-        }catch (SQLException e) {
+        }
+        catch (SQLException e) {
             throw new IllegalStateException("SQL Error", e);
         }
     }
         
-    public String[][] selectAll(String table) {
+    public String[][] selectAll(String table, String columns) {
         try (Statement statement = this.connection.createStatement()) {
-                ResultSet rs = statement.executeQuery(String.format("SELECT * FROM %s;", table));
+                ResultSet rs = statement.executeQuery(String.format("SELECT %s FROM %s;",columns, table));
                 ResultSetMetaData rsmd = rs.getMetaData();
                 
                 int numeroColunas = rsmd.getColumnCount();
                 int numeroLinhas = this.countAll(table);
-                String[][] results = new String[numeroLinhas][numeroColunas];
+                String[][] results = new String[numeroLinhas + 1][numeroColunas];
 
-               while(rs.next()){
-                    for(int i=1; i<=numeroColunas; i++){
-                        results[rs.getRow()-1][i-1] = rs.getString(i);
+                while(rs.next()){
+                    for(int i = 0; i < numeroColunas; i++){
+                       results[0][i] = rsmd.getColumnName(i + 1);
                     }
-                }
+                  
+                    for(int i=1; i<=numeroColunas; i++){
+                        results[rs.getRow()][i-1] = rs.getString(i);
+                    }
+                }          
+                
             return results;
-        } catch (SQLException e) {
+        } 
+        catch (SQLException e) {
+            throw new IllegalStateException("SQL Error", e);
+        }
+    }
+    
+    public void insertInto(String table, String produtoValues){
+        try (Statement statement = this.connection.createStatement()) {
+            int indice = this.countAll(table) + 1;
+            String id_produto = String.valueOf(indice);
+
+            String values = id_produto + ", " + produtoValues;
+            String query = String.format("INSERT INTO %s VALUES (%s);", table, values);
+            
+            statement.execute(query);
+        }
+        catch (SQLException e) {
             throw new IllegalStateException("SQL Error", e);
         }
     }
