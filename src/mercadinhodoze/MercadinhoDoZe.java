@@ -11,7 +11,7 @@ public class MercadinhoDoZe {
     public static void main(String[] args) {
         String url = "jdbc:mysql://localhost:3306/mercadinho";
         String username = "root";
-        String password = "P@$$w0rd";
+        String password = "";
 
         try (Connection connection = DriverManager.getConnection(url, username, password)) {
             
