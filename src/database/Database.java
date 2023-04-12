@@ -12,6 +12,54 @@ public class Database {
         this.connection = connection;
     }
     
+    public String getColumnsNames(String table){
+        try (Statement statement = this.connection.createStatement()){
+            ResultSet rs = statement.executeQuery(String.format("SELECT * FROM %s;", table));
+            ResultSetMetaData rsmd = rs.getMetaData();
+            
+            String parametros = "";
+            
+            int x = 1;
+            while(rs.next()){
+                if (x == 1){
+                    parametros = parametros + rsmd.getColumnName(x);
+                }
+                else{
+                    parametros = parametros + "," + rsmd.getColumnName(x);
+                }
+                x++;
+            }
+            
+            return parametros;
+        }
+        catch (SQLException e) {
+            throw new IllegalStateException("SQL Error", e);
+        }
+    }
+    
+    public String[] getColumnsNamesList(String table){
+        try (Statement statement = this.connection.createStatement()){
+            ResultSet rs = statement.executeQuery(String.format("SELECT * FROM %s;", table));
+            ResultSetMetaData rsmd = rs.getMetaData();
+            
+            int numeroColunas = rsmd.getColumnCount();
+            String[] parametros = new String[numeroColunas - 1];
+            
+            while(rs.next()){
+                
+                for(int i = 0; i < numeroColunas - 1; i++){
+                    parametros[i] = rsmd.getColumnName(i + 2);
+                }
+                break;
+                
+            }
+            return parametros;
+        }
+        catch (SQLException e) {
+            throw new IllegalStateException("SQL Error", e);
+        }
+    }
+    
     public int countAll(String table){
         try (Statement statement = this.connection.createStatement()){
             ResultSet rs = statement.executeQuery(String.format("SELECT COUNT(*) FROM %s;", table));

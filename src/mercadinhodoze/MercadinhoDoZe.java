@@ -4,7 +4,7 @@ import java.sql.DriverManager;
 import java.sql.SQLException;
 
 import controllers.ProdutoController;
-
+import utils.Menu;
 
 public class MercadinhoDoZe {
 
@@ -14,9 +14,21 @@ public class MercadinhoDoZe {
         String password = "";
 
         try (Connection connection = DriverManager.getConnection(url, username, password)) {
-           
-        ProdutoController.insertProduto(connection);
-        ProdutoController.listaProdutos(connection);
+            
+//            ProdutoController.listaProdutos(connection);
+            while(true){
+                Menu.menuPrincipal();
+                int opcao = Menu.pegaOpcao();
+                
+                switch(opcao){
+                    
+                    case 1 -> ProdutoController.listaProdutos(connection);
+                    case 2 -> ProdutoController.insertProduto(connection);
+                    default -> System.out.println("Opção inválida! Seleciona uma das opções listadas");
+                    
+                }
+            }
+        
         
         }
         catch (SQLException e) {
