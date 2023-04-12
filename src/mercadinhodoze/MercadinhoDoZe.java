@@ -3,7 +3,7 @@ import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
 
-import controllers.ProdutoController;
+import controllers.Controller;
 import utils.Menu;
 
 public class MercadinhoDoZe {
@@ -11,25 +11,23 @@ public class MercadinhoDoZe {
     public static void main(String[] args) {
         String url = "jdbc:mysql://localhost:3306/mercadinho";
         String username = "root";
-        String password = "";
+        String password = "P@$$w0rd";
 
         try (Connection connection = DriverManager.getConnection(url, username, password)) {
             
-//            ProdutoController.listaProdutos(connection);
             while(true){
                 Menu.menuPrincipal();
                 int opcao = Menu.pegaOpcao();
                 
                 switch(opcao){
                     
-                    case 1 -> ProdutoController.listaProdutos(connection);
-                    case 2 -> ProdutoController.insertProduto(connection);
+                    case 1 -> Controller.listaTabela(connection);
+                    case 2 -> Controller.insereDadosTabela(connection);
+                    case 3 -> Controller.apagaDadosTabela(connection);
                     default -> System.out.println("Opção inválida! Seleciona uma das opções listadas");
                     
                 }
-            }
-        
-        
+            }        
         }
         catch (SQLException e) {
             throw new IllegalStateException("SQL Error", e);

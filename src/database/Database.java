@@ -29,7 +29,6 @@ public class Database {
                 }
                 x++;
             }
-            
             return parametros;
         }
         catch (SQLException e) {
@@ -51,7 +50,6 @@ public class Database {
                     parametros[i] = rsmd.getColumnName(i + 2);
                 }
                 break;
-                
             }
             return parametros;
         }
@@ -92,8 +90,7 @@ public class Database {
                     for(int i=1; i<=numeroColunas; i++){
                         results[rs.getRow()][i-1] = rs.getString(i);
                     }
-                }          
-                
+                }
             return results;
         } 
         catch (SQLException e) {
@@ -109,6 +106,16 @@ public class Database {
             String values = id_produto + ", " + produtoValues;
             String query = String.format("INSERT INTO %s VALUES (%s);", table, values);
             
+            statement.execute(query);
+        }
+        catch (SQLException e) {
+            throw new IllegalStateException("SQL Error", e);
+        }
+    }
+    
+    public void deleteRow(String table, int row){
+        try (Statement statement = this.connection.createStatement()) {
+            String query = String.format("DELETE FROM %s WHERE id_produto = %d;", table, row);
             statement.execute(query);
         }
         catch (SQLException e) {

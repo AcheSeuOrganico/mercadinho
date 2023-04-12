@@ -1,7 +1,7 @@
 package views;
 
 
-public class AbstractView {
+public class View {
     
     public static void displayTable(String[][] table) {
         for(String[] i : table){
