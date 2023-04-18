@@ -122,4 +122,7 @@ public class Database {
             throw new IllegalStateException("SQL Error", e);
         }
     }
+    public static void Metodo (){
+        System.out.println("metodo");
+    }
 }
