@@ -24,6 +24,7 @@ public class MercadinhoDoZe {
                     case 1 -> Controller.listaTabela(connection);
                     case 2 -> Controller.insereDadosTabela(connection);
                     case 3 -> Controller.apagaDadosTabela(connection);
+                    case 5 -> System.exit(0);
                     default -> System.out.println("Opção inválida! Seleciona uma das opções listadas");
                     
                 }

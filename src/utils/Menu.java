@@ -9,6 +9,7 @@ public class Menu {
         System.out.println("2 - Inserir");
         System.out.println("3 - Apagar");
         System.out.println("4 - Atualizar");
+        System.out.println("5 - Sair");
     }
     
     public static int pegaOpcao(){
