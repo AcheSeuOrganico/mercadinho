@@ -1,7 +1,7 @@
 USE mercadinho;
 
 
-CREATE TABLE Produto (
+CREATE TABLE produto (
 	id_produto int,
 	nome varchar(60),
 	categoria varchar(60),
@@ -11,15 +11,15 @@ CREATE TABLE Produto (
 	PRIMARY KEY(id_produto)
 )
 
-CREATE TABLE Estoque (
+CREATE TABLE estoque (
 	id_estoque int,
 	id_produto int,
 	quantidade int,
 	PRIMARY KEY(id_estoque), 
-	FOREIGN KEY(id_produto) REFERENCES Produto(id_produto)
+	FOREIGN KEY(id_produto) REFERENCES produto(id_produto)
 )
 
-CREATE TABLE Vendas (
+CREATE TABLE vendas (
 	id_venda int,
 	nome varchar(60),
 	cpf int,
