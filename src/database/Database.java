@@ -11,6 +11,17 @@ public class Database {
     String username = "root";
     String password = "";
     
+    
+    public void rawQuery(String query){
+        try (Connection connection = DriverManager.getConnection(url, username, password)){
+            Statement statement = connection.createStatement();
+            statement.executeQuery(query);
+        }
+        catch (SQLException e) {
+            throw new IllegalStateException("SQL Error", e);
+        }
+    }
+    
     public String getColumnsNames(String table){
         try (Connection connection = DriverManager.getConnection(url, username, password)){
             Statement statement = connection.createStatement();
