@@ -7,9 +7,9 @@ import java.sql.ResultSet;
 import java.sql.ResultSetMetaData;
 
 public class Database {
-    String url = "jdbc:mysql://localhost:3306/mercadinho";
-    String username = "root";
-    String password = "";
+    public String url = "jdbc:mysql://localhost:3306/mercadinho";
+    public String username = "root";
+    public String password = "";
     
     
     public void rawQuery(String query){

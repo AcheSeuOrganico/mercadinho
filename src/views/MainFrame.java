@@ -1,6 +1,11 @@
 package views;
 
 import database.Database;
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.sql.Statement;
 import java.util.Vector;
 import javax.swing.JOptionPane;
 import javax.swing.table.DefaultTableModel;
@@ -395,9 +400,24 @@ public class MainFrame extends javax.swing.JFrame {
     private void botaoQueryProdutoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_botaoQueryProdutoActionPerformed
         
         String id = selectBoxIdProduto.getSelectedItem().toString();
-        db.rawQuery(String.format("SELECT * FROM produto WHERE id_produto=%s;", id));
+        try (Connection connection = DriverManager.getConnection(db.url, db.username, db.password)){
+            String query = String.format("SELECT * FROM produto WHERE id_produto=%s", id);
+            Statement statement = connection.createStatement(); 
+            ResultSet rs = statement.executeQuery(query);
+            
+            while(rs.next()){
+                txtNomeProduto.setText(rs.getString(2));
+                txtCategoriaProduto.setText(rs.getString(3));
+                txtCustoProduto.setText(rs.getString(4));
+                txtPrecoProduto.setText(rs.getString(5));
+                txtDataValidade.setText(rs.getString(6));
+            }
+        }
+        catch (SQLException e) {
+            throw new IllegalStateException("SQL Error", e);
+        }
         
-//        txtNomeProduto.setText()
+
     }//GEN-LAST:event_botaoQueryProdutoActionPerformed
 
     /**
