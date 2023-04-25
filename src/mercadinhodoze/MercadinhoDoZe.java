@@ -1,37 +1,37 @@
 package mercadinhodoze;
-import java.sql.Connection;
-import java.sql.DriverManager;
 import java.sql.SQLException;
 
 import controllers.Controller;
 import utils.Menu;
+import database.Database;
 
 public class MercadinhoDoZe {
 
-    public static void main(String[] args) {
-        String url = "jdbc:mysql://localhost:3306/mercadinho";
-        String username = "root";
-        String password = "";
+    public static void main(String[] args) throws SQLException{
 
-        try (Connection connection = DriverManager.getConnection(url, username, password)) {
+            Database db = new Database();
             
-            while(true){
-                Menu.menuPrincipal();
-                int opcao = Menu.pegaOpcao();
-                
-                switch(opcao){
-                    
-                    case 1 -> Controller.listaTabela(connection);
-                    case 2 -> Controller.insereDadosTabela(connection);
-                    case 3 -> Controller.apagaDadosTabela(connection);
-                    case 5 -> System.exit(0);
-                    default -> System.out.println("Opção inválida! Seleciona uma das opções listadas");
-                    
-                }
-            }        
+            String[] teste = db.getColumnsNamesList("produto");
+            
+            for(String oi : teste){
+                System.out.println(oi);
+            }
+            
+//            while(true){
+//                Menu.menuPrincipal();
+//                int opcao = Menu.pegaOpcao();
+//                
+//                switch(opcao){
+//                    
+//                    case 1 -> Controller.listaTabela();
+//                    case 2 -> Controller.insereDadosTabela();
+//                    case 3 -> Controller.apagaDadosTabela();
+//                    case 5 -> System.exit(0);
+//                    default -> System.out.println("Opção inválida! Seleciona uma das opções listadas");
+//                    
+//                }
+//            }        
         }
-        catch (SQLException e) {
-            throw new IllegalStateException("SQL Error", e);
-        }
+
     }    
-}
+

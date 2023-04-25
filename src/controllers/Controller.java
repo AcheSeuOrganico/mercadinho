@@ -8,14 +8,14 @@ import views.View;
 
 public class Controller {
     
-    public static void listaTabela(Connection connection) throws SQLException{
-        Database db = new Database(connection);
+    public static void listaTabela() throws SQLException{
+        Database db = new Database();
         String[][] result = db.selectAll( "produto", "*");
         View.displayTable(result);
     }
     
-    public static void insereDadosTabela(Connection connection) throws SQLException {
-        Database db = new Database(connection);
+    public static void insereDadosTabela() throws SQLException {
+        Database db = new Database();
         String[] columnsNames = db.getColumnsNamesList("produto");
         
         String parametros = "";
@@ -48,11 +48,11 @@ public class Controller {
         System.out.println("Adicionado com sucesso");
     }
     
-    public static void apagaDadosTabela(Connection connection) throws SQLException{
-        Database db = new Database(connection);
+    public static void apagaDadosTabela() throws SQLException{
+        Database db = new Database();
         
         while(true){
-            listaTabela(connection);
+            listaTabela();
             
             System.out.println("Digite o id de um produto para apagar");
             try{
