@@ -12,35 +12,44 @@ public class Database {
     public String password = "";
     
     
-    public void rawQuery(String query){
+    public boolean exists(String table, String column, String value){
         try (Connection connection = DriverManager.getConnection(url, username, password)){
+            String query = String.format("SELECT * FROM %s WHERE %s = '%s'", table, column, value);
             Statement statement = connection.createStatement();
-            statement.executeQuery(query);
+            ResultSet rs = statement.executeQuery(query);
+            return rs.next();
         }
         catch (SQLException e) {
             throw new IllegalStateException("SQL Error", e);
         }
     }
     
-    public String getColumnsNames(String table){
-        try (Connection connection = DriverManager.getConnection(url, username, password)){
-            Statement statement = connection.createStatement();
-            ResultSet rs = statement.executeQuery(String.format("SHOW COLUMNS FROM %s", table));
-            ResultSetMetaData rsmd = rs.getMetaData();
+    public void updateValue(String table, String[] values, String id){
+         try (Connection connection = DriverManager.getConnection(url, username, password)){
+            String set = "SET ";
+            String[] columns = this.getColumnsNamesList(table);
             
-            String parametros = "";
-            
-            int x = 1;
-            while(rs.next()){
-                
+            for(int i = 0; i < values.length; i++){
+                if(i == 0 ){
+                    String keyValuePair = String.format("%s = %s", columns[i + 1], values[i]);
+                    set = set + keyValuePair;
+                }
+                else{
+                    String keyValuePair = String.format(",%s = %s", columns[i + 1], values[i]);
+                    set = set + keyValuePair;
+                }                
             }
-            return parametros;
+                       
+            String query = String.format("UPDATE %s %s WHERE id_produto = %s;", table, set, id);
+            Statement statement = connection.createStatement();
+            statement.execute(query);
         }
         catch (SQLException e) {
             throw new IllegalStateException("SQL Error", e);
         }
     }
     
+  
     public String[] getColumnsNamesList(String table){
         try (Connection connection = DriverManager.getConnection(url, username, password)){
             Statement statement = connection.createStatement();
@@ -104,13 +113,15 @@ public class Database {
     public void insertInto(String table, String produtoValues){
         try (Connection connection = DriverManager.getConnection(url, username, password)){
             Statement statement = connection.createStatement();
-            int indice = this.countAll(table) + 1;
-            String id_produto = String.valueOf(indice);
-
-            String values = id_produto + ", " + produtoValues;
-            System.out.println(values);
-            String query = String.format("INSERT INTO %s VALUES (%s);", table, values);
             
+            String[] columnsNamesList = this.getColumnsNamesList(table);
+            columnsNamesList[0] = "";
+            String columnsNames = String.join(",", columnsNamesList);
+            char[] columnsNamesChar = columnsNames.toCharArray();
+            columnsNamesChar[0] = ' ';
+            columnsNames = String.valueOf(columnsNamesChar);
+            
+            String query = String.format("INSERT INTO %s (%s) VALUES (%s);", table, columnsNames, produtoValues);
             statement.execute(query);
         }
         catch (SQLException e) {
