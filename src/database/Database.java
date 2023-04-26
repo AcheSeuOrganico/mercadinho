@@ -139,7 +139,23 @@ public class Database {
             throw new IllegalStateException("SQL Error", e);
         }
     }
-    public static void Metodo (){
-        System.out.println("metodo");
+    public String[] getProduto(String[] columns, int id){
+        try (Connection connection = DriverManager.getConnection(url, username, password)){
+            String columnsNames = String.join(",", columns);
+            String query = String.format("SELECT %s FROM produto WHERE id_produto=%s", columnsNames, id);
+            Statement statement = connection.createStatement(); 
+            ResultSet rs = statement.executeQuery(query);
+            String[] produto = new String[columns.length];
+            
+            while(rs.next()){
+                for(int i = 1; i <= columns.length;i++){
+                    produto[i - 1] = rs.getString(i);
+                }
+            }
+            
+            return produto;
+        } catch (SQLException e) {
+            throw new IllegalStateException("SQL Error", e);
+        }
     }
 }
