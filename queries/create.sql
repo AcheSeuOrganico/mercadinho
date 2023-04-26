@@ -1,14 +1,14 @@
 USE mercadinho;
 
 
-create table produto (
+CREATE TABLE produto (
 	id_produto int AUTO_INCREMENT,
 	nome varchar(60),
 	categoria varchar(60),
 	custo double,
 	preco double,
 	data_validade date,
-	primary key(id_produto)
+	PRIMARY KEY(id_produto)
 )
 
 CREATE TABLE estoque (
@@ -24,6 +24,7 @@ CREATE TABLE vendas (
 	nome varchar(60),
 	cpf int,
 	id_produto int,
+	data_venda date,
 	PRIMARY KEY (id_venda),
 	FOREIGN KEY (id_produto) REFERENCES estoque(id_produto)
 )
