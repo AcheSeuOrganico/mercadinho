@@ -12,7 +12,7 @@ CREATE TABLE produto (
 )
 
 CREATE TABLE estoque (
-	id_estoque int,
+	id_estoque int AUTO_INCREMENT,
 	id_produto int,
 	quantidade int,
 	PRIMARY KEY(id_estoque), 
@@ -20,9 +20,9 @@ CREATE TABLE estoque (
 )
 
 CREATE TABLE vendas (
-	id_venda int,
-	nome varchar(60),
-	cpf int,
+	id_venda int AUTO_INCREMENT,
+	nome varchar(60) NULL,
+	cpf int NULL,
 	id_produto int,
 	data_venda date,
 	PRIMARY KEY (id_venda),
