@@ -19,3 +19,25 @@ INSERT INTO produto (nome, categoria, custo, preco, data_validade) VALUES
 ('Biscoito Cream Cracker', 'Biscoitos', 1.99, 3.50, '2023-09-30'),
 ('Bolacha Maizena', 'Biscoitos', 1.49, 2.99, '2023-10-31'),
 ('Chocolate ao Leite', 'Chocolates', 2.99, 4.99, '2023-11-30');
+
+INSERT INTO estoque (id_estoque, id_produto, quantidade) VALUES
+(12,2,500),
+(13,3,500),
+(14,4,500),
+(15,5,500),
+(16,6,500),
+(17,7,500),
+(18,8,500),
+(19,9,500),
+(20,10,500),
+(21,11,500),
+(22,12,500),
+(23,13,500),
+(24,14,500),
+(25,15,500),
+(26,16,500),
+(27,17,500),
+(28,18,500),
+(29,19,500),
+(30,20,500),
+(31,21,500);
