@@ -9,7 +9,7 @@ import java.sql.ResultSetMetaData;
 public class Database {
     public String url = "jdbc:mysql://localhost:3306/mercadinho";
     public String username = "root";
-    public String password = "";
+    public String password = "P@$$w0rd";
     
     
     public boolean exists(String table, String column, String value){
