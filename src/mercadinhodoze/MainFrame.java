@@ -23,6 +23,7 @@ public class MainFrame extends javax.swing.JFrame {
         initComponents();
         setIdProdutos();
         fetchAll();
+        updateQuantidades();
     }
 
     
@@ -73,7 +74,7 @@ public class MainFrame extends javax.swing.JFrame {
         cpfClienteTxt = new javax.swing.JTextField();
         jLabel13 = new javax.swing.JLabel();
         quantidadeProdutoTxt = new javax.swing.JTextField();
-        jComboBox1 = new javax.swing.JComboBox<>();
+        quantidadeBox = new javax.swing.JComboBox<>();
         jLabel14 = new javax.swing.JLabel();
         jLabel15 = new javax.swing.JLabel();
 
@@ -150,21 +151,21 @@ public class MainFrame extends javax.swing.JFrame {
 
         tabelaCarrinho.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
-                {null, null, null, null},
-                {null, null, null, null},
-                {null, null, null, null},
-                {null, null, null, null},
-                {null, null, null, null},
-                {null, null, null, null},
-                {null, null, null, null},
-                {null, null, null, null}
+                {null, null, null, null, null, null},
+                {null, null, null, null, null, null},
+                {null, null, null, null, null, null},
+                {null, null, null, null, null, null},
+                {null, null, null, null, null, null},
+                {null, null, null, null, null, null},
+                {null, null, null, null, null, null},
+                {null, null, null, null, null, null}
             },
             new String [] {
-                "ID Produto", "Nome", "Categoria", "Preço"
+                "ID Produto", "Nome", "Categoria", "Quantidade", "Valor unidade", "Valor total"
             }
         ) {
             Class[] types = new Class [] {
-                java.lang.String.class, java.lang.String.class, java.lang.String.class, java.lang.String.class
+                java.lang.String.class, java.lang.String.class, java.lang.String.class, java.lang.Object.class, java.lang.Object.class, java.lang.String.class
             };
 
             public Class getColumnClass(int columnIndex) {
@@ -347,7 +348,7 @@ public class MainFrame extends javax.swing.JFrame {
             }
         });
 
-        jComboBox1.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
+        quantidadeBox.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
 
         jLabel14.setText("ID Produto");
 
@@ -446,7 +447,7 @@ public class MainFrame extends javax.swing.JFrame {
                                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                                             .addComponent(jLabel15)
                                             .addGroup(layout.createSequentialGroup()
-                                                .addComponent(jComboBox1, javax.swing.GroupLayout.PREFERRED_SIZE, 113, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                                .addComponent(quantidadeBox, javax.swing.GroupLayout.PREFERRED_SIZE, 113, javax.swing.GroupLayout.PREFERRED_SIZE)
                                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                                                 .addComponent(botaoAdicionarCarrinho)
                                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
@@ -481,7 +482,7 @@ public class MainFrame extends javax.swing.JFrame {
                             .addComponent(idProdutoCarrinho, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                             .addComponent(botaoRemover)
                             .addComponent(botaoLimparCarrinho)
-                            .addComponent(jComboBox1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                            .addComponent(quantidadeBox, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                         .addGap(18, 18, 18)))
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(layout.createSequentialGroup()
@@ -564,6 +565,14 @@ public class MainFrame extends javax.swing.JFrame {
         }
     }
     
+    public void updateQuantidades(){
+        quantidadeBox.removeAllItems();
+        for(int i = 1; i <= 500; i++){
+            String item = String.format("%d", i);
+            quantidadeBox.addItem(item);
+        }
+    }
+    
     public void updateCarrinho(){
         DefaultTableModel df = (DefaultTableModel)tabelaCarrinho.getModel();
         df.setRowCount(0);
@@ -601,7 +610,7 @@ public class MainFrame extends javax.swing.JFrame {
         
         double preco = 0;
         for(int i = 0; i < this.carrinho.size(); i++){
-            String precoProduto = this.carrinho.get(i)[3];
+            String precoProduto = this.carrinho.get(i)[5];
             preco = preco + Double.parseDouble(precoProduto);
         }        
         totalCarrinho.setText(String.format("%.2f", preco));
@@ -661,7 +670,7 @@ public class MainFrame extends javax.swing.JFrame {
         
         String id = selectBoxIdProduto.getSelectedItem().toString();
         try (Connection connection = DriverManager.getConnection(db.url, db.username, db.password)){
-            String query = String.format("SELECT * FROM produto WHERE id_produto=%s", id);
+            String query = String.format("SELECT * FROM produto p JOIN estoque e p.id_produto = e.id_produto WHERE id_produto=%s", id);
             Statement statement = connection.createStatement(); 
             ResultSet rs = statement.executeQuery(query);
             
@@ -735,10 +744,12 @@ public class MainFrame extends javax.swing.JFrame {
     private void botaoAdicionarCarrinhoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_botaoAdicionarCarrinhoActionPerformed
         
         String id_produto = idProdutoCarrinho.getSelectedItem().toString();
-        String[] parametros = {"id_produto", "nome", "categoria", "preco"};
+        String quantidade = quantidadeBox.getSelectedItem().toString();
+        String[] parametros = {"id_produto", "nome", "categoria", "preco"};        
         String[] produto = db.getProduto(parametros, Integer.parseInt(id_produto));
-        
-        this.carrinho.add(produto);
+        double precoTotal = Double.parseDouble(produto[3]) * Double.parseDouble(quantidade);
+        String[] produtoFormatado = {produto[0], produto[1], produto[2], quantidade, produto[3], String.format("%.2f", precoTotal)};
+        this.carrinho.add(produtoFormatado);
         updateCarrinho();
         updateTotalCarrinho();
     }//GEN-LAST:event_botaoAdicionarCarrinhoActionPerformed
@@ -866,7 +877,6 @@ public class MainFrame extends javax.swing.JFrame {
     private javax.swing.JTextField cpfClienteTxt;
     private javax.swing.JComboBox<String> idProdutoCarrinho;
     private javax.swing.JButton inserirButton;
-    private javax.swing.JComboBox<String> jComboBox1;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel10;
     private javax.swing.JLabel jLabel11;
@@ -888,6 +898,7 @@ public class MainFrame extends javax.swing.JFrame {
     private javax.swing.JTextField jTextField6;
     private javax.swing.JTextField jTextField7;
     private javax.swing.JTextField nomeClienteTxt;
+    private javax.swing.JComboBox<String> quantidadeBox;
     private javax.swing.JTextField quantidadeProdutoTxt;
     private javax.swing.JComboBox<String> selectBoxIdProduto;
     private javax.swing.JComboBox<String> selectIdProdutoDelete;

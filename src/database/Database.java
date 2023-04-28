@@ -192,7 +192,7 @@ public class Database {
             while(rs.next()){
                 idProduto = Integer.parseInt(rs.getString(1));
             }
-            rs.close();
+
             return idProduto;
         }
         catch (SQLException e) {

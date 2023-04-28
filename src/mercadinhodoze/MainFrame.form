@@ -133,7 +133,7 @@
                                       <Group type="103" groupAlignment="0" attributes="0">
                                           <Component id="jLabel15" min="-2" max="-2" attributes="0"/>
                                           <Group type="102" attributes="0">
-                                              <Component id="jComboBox1" min="-2" pref="113" max="-2" attributes="0"/>
+                                              <Component id="quantidadeBox" min="-2" pref="113" max="-2" attributes="0"/>
                                               <EmptySpace type="unrelated" max="-2" attributes="0"/>
                                               <Component id="botaoAdicionarCarrinho" min="-2" max="-2" attributes="0"/>
                                               <EmptySpace max="-2" attributes="0"/>
@@ -181,7 +181,7 @@
                           <Component id="idProdutoCarrinho" alignment="3" min="-2" max="-2" attributes="0"/>
                           <Component id="botaoRemover" alignment="3" min="-2" max="-2" attributes="0"/>
                           <Component id="botaoLimparCarrinho" alignment="3" min="-2" max="-2" attributes="0"/>
-                          <Component id="jComboBox1" alignment="3" min="-2" max="-2" attributes="0"/>
+                          <Component id="quantidadeBox" alignment="3" min="-2" max="-2" attributes="0"/>
                       </Group>
                       <EmptySpace type="separate" max="-2" attributes="0"/>
                   </Group>
@@ -384,15 +384,27 @@
         <Component class="javax.swing.JTable" name="tabelaCarrinho">
           <Properties>
             <Property name="model" type="javax.swing.table.TableModel" editor="org.netbeans.modules.form.editors2.TableModelEditor">
-              <Table columnCount="4" rowCount="8">
+              <Table columnCount="6" rowCount="8">
                 <Column editable="true" title="ID Produto" type="java.lang.String"/>
                 <Column editable="true" title="Nome" type="java.lang.String"/>
                 <Column editable="true" title="Categoria" type="java.lang.String"/>
-                <Column editable="true" title="Pre&#xe7;o" type="java.lang.String"/>
+                <Column editable="true" title="Quantidade" type="java.lang.Object"/>
+                <Column editable="true" title="Valor unidade" type="java.lang.Object"/>
+                <Column editable="true" title="Valor total" type="java.lang.String"/>
               </Table>
             </Property>
             <Property name="columnModel" type="javax.swing.table.TableColumnModel" editor="org.netbeans.modules.form.editors2.TableColumnModelEditor">
               <TableColumnModel selectionModel="0">
+                <Column maxWidth="-1" minWidth="-1" prefWidth="-1" resizable="true">
+                  <Title/>
+                  <Editor/>
+                  <Renderer/>
+                </Column>
+                <Column maxWidth="-1" minWidth="-1" prefWidth="-1" resizable="true">
+                  <Title/>
+                  <Editor/>
+                  <Renderer/>
+                </Column>
                 <Column maxWidth="-1" minWidth="-1" prefWidth="-1" resizable="true">
                   <Title/>
                   <Editor/>
@@ -675,7 +687,7 @@
         <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="quantidadeProdutoTxtActionPerformed"/>
       </Events>
     </Component>
-    <Component class="javax.swing.JComboBox" name="jComboBox1">
+    <Component class="javax.swing.JComboBox" name="quantidadeBox">
       <Properties>
         <Property name="model" type="javax.swing.ComboBoxModel" editor="org.netbeans.modules.form.editors2.ComboBoxModelEditor">
           <StringArray count="4">
