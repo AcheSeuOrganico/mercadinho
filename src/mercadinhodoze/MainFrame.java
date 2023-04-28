@@ -24,6 +24,7 @@ public class MainFrame extends javax.swing.JFrame {
         setIdProdutos();
         fetchAll();
         updateQuantidades();
+        updateTabelaVendas();
     }
 
     
@@ -227,37 +228,37 @@ public class MainFrame extends javax.swing.JFrame {
 
         tabelaVendas.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
-                {null, null, null, null, null},
-                {null, null, null, null, null},
-                {null, null, null, null, null},
-                {null, null, null, null, null},
-                {null, null, null, null, null},
-                {null, null, null, null, null},
-                {null, null, null, null, null},
-                {null, null, null, null, null},
-                {null, null, null, null, null},
-                {null, null, null, null, null},
-                {null, null, null, null, null},
-                {null, null, null, null, null},
-                {null, null, null, null, null},
-                {null, null, null, null, null},
-                {null, null, null, null, null},
-                {null, null, null, null, null},
-                {null, null, null, null, null},
-                {null, null, null, null, null},
-                {null, null, null, null, null},
-                {null, null, null, null, null},
-                {null, null, null, null, null},
-                {null, null, null, null, null},
-                {null, null, null, null, null},
-                {null, null, null, null, null}
+                {null, null, null, null, null, null},
+                {null, null, null, null, null, null},
+                {null, null, null, null, null, null},
+                {null, null, null, null, null, null},
+                {null, null, null, null, null, null},
+                {null, null, null, null, null, null},
+                {null, null, null, null, null, null},
+                {null, null, null, null, null, null},
+                {null, null, null, null, null, null},
+                {null, null, null, null, null, null},
+                {null, null, null, null, null, null},
+                {null, null, null, null, null, null},
+                {null, null, null, null, null, null},
+                {null, null, null, null, null, null},
+                {null, null, null, null, null, null},
+                {null, null, null, null, null, null},
+                {null, null, null, null, null, null},
+                {null, null, null, null, null, null},
+                {null, null, null, null, null, null},
+                {null, null, null, null, null, null},
+                {null, null, null, null, null, null},
+                {null, null, null, null, null, null},
+                {null, null, null, null, null, null},
+                {null, null, null, null, null, null}
             },
             new String [] {
-                "Id venda", "Nome", "CPF", "Produto", "Preço"
+                "Id venda", "Nome", "Produto", "Quantidade", "Valor", "Data venda"
             }
         ) {
             Class[] types = new Class [] {
-                java.lang.String.class, java.lang.String.class, java.lang.String.class, java.lang.String.class, java.lang.String.class
+                java.lang.String.class, java.lang.String.class, java.lang.String.class, java.lang.String.class, java.lang.String.class, java.lang.String.class
             };
 
             public Class getColumnClass(int columnIndex) {
@@ -565,6 +566,22 @@ public class MainFrame extends javax.swing.JFrame {
         }
     }
     
+    public void updateTabelaVendas(){
+        String[] columns = {"x.id_venda","x.nome", "y.nome", "x.quantidade","x.valor_total","x.data_venda",};
+        String[][] produtos = db.selectJoin("vendas", "produto", columns);
+        
+        DefaultTableModel df = (DefaultTableModel)tabelaVendas.getModel();
+        df.setRowCount(0);
+        
+        for (String[] produto : produtos) {
+            Vector vetor = new Vector();
+            for (String parametro : produto) {
+                vetor.add(parametro);
+            }
+            df.addRow(vetor);
+        }
+    }
+    
     public void updateQuantidades(){
         quantidadeBox.removeAllItems();
         for(int i = 1; i <= 500; i++){
@@ -671,6 +688,7 @@ public class MainFrame extends javax.swing.JFrame {
         String id = selectBoxIdProduto.getSelectedItem().toString();
         try (Connection connection = DriverManager.getConnection(db.url, db.username, db.password)){
             String query = String.format("SELECT * FROM produto p JOIN estoque e p.id_produto = e.id_produto WHERE id_produto=%s", id);
+            System.out.println(query);
             Statement statement = connection.createStatement(); 
             ResultSet rs = statement.executeQuery(query);
             
@@ -798,7 +816,10 @@ public class MainFrame extends javax.swing.JFrame {
             String[] values = new String[this.carrinho.size()];
             
             for(int i = 0; i < this.carrinho.size(); i++){
-                values[i] = String.format("('%s', '%s', %s,  CURDATE())", nomeCliente, cpf, this.carrinho.get(i)[0]); 
+                String idProduto = this.carrinho.get(i)[0];
+                String quantidade = this.carrinho.get(i)[3];
+                String valorTotal = this.carrinho.get(i)[5];
+                values[i] = String.format("('%s', '%s', %s, %s, %s,  CURDATE())", nomeCliente, cpf, idProduto, quantidade, valorTotal); 
             }
             
             String parametros = String.join(",", values);            
@@ -807,6 +828,9 @@ public class MainFrame extends javax.swing.JFrame {
             df.setRowCount(0);
             nomeClienteTxt.setText("");
             cpfClienteTxt.setText("");
+            this.carrinho.clear();
+            updateTotalCarrinho();
+            updateTabelaVendas();            
         }
         catch(Exception e){
             JOptionPane.showMessageDialog(this, "Não foi possivel realizar a transação");

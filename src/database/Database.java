@@ -121,7 +121,6 @@ public class Database {
             columnsNames = String.valueOf(columnsNamesChar);
             
             String query = String.format("INSERT INTO %s (%s) VALUES %s;", table, columnsNames, produtoValues);
-            System.out.println(query);
             statement.execute(query);
         }
         catch (SQLException e) {
