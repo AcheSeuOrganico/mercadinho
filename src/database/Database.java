@@ -5,11 +5,12 @@ import java.sql.SQLException;
 import java.sql.Statement;
 import java.sql.ResultSet;
 import java.sql.ResultSetMetaData;
+import java.util.ArrayList;
 
 public class Database {
     public String url = "jdbc:mysql://localhost:3306/mercadinho";
     public String username = "root";
-    public String password = "P@$$w0rd";
+    public String password = "";
     
     
     public boolean exists(String table, String column, String value){
@@ -51,26 +52,24 @@ public class Database {
     
   
     public String[] getColumnsNamesList(String table){
-        try (Connection connection = DriverManager.getConnection(url, username, password)){
-            Statement statement = connection.createStatement();
-            ResultSet rs = statement.executeQuery(String.format("SHOW COLUMNS FROM %s", table));
-            ResultSetMetaData rsmd = rs.getMetaData();
-            
-            
-            int numeroColunas = rsmd.getColumnCount();
-            String[] parametros = new String[numeroColunas];
-            
-            int x = 0;
-            while(rs.next()){
-                parametros[x] = rs.getString(1);
-                x++;
-            }
-            return parametros;
+    try (Connection connection = DriverManager.getConnection(url, username, password)){
+        Statement statement = connection.createStatement();
+        ResultSet rs = statement.executeQuery(String.format("SHOW COLUMNS FROM %s", table));
+        ArrayList<String> parametros = new ArrayList<>();
+
+        int x = 0;
+        while(rs.next()){
+            parametros.add(x, rs.getString(1));
+            x++;
         }
-        catch (SQLException e) {
-            throw new IllegalStateException("SQL Error", e);
-        }
+        
+        String[] parametrosList = new String[parametros.size()];
+        return parametros.toArray(parametrosList);
     }
+    catch (SQLException e) {
+        throw new IllegalStateException("SQL Error", e);
+    }
+}
 
     public int countAll(String table){
         try (Connection connection = DriverManager.getConnection(url, username, password)){
@@ -114,14 +113,15 @@ public class Database {
         try (Connection connection = DriverManager.getConnection(url, username, password)){
             Statement statement = connection.createStatement();
             
-            String[] columnsNamesList = this.getColumnsNamesList(table);
+            String[] columnsNamesList = this.getColumnsNamesList(table);            
             columnsNamesList[0] = "";
             String columnsNames = String.join(",", columnsNamesList);
             char[] columnsNamesChar = columnsNames.toCharArray();
             columnsNamesChar[0] = ' ';
             columnsNames = String.valueOf(columnsNamesChar);
             
-            String query = String.format("INSERT INTO %s (%s) VALUES (%s);", table, columnsNames, produtoValues);
+            String query = String.format("INSERT INTO %s (%s) VALUES %s;", table, columnsNames, produtoValues);
+            System.out.println(query);
             statement.execute(query);
         }
         catch (SQLException e) {
@@ -157,5 +157,46 @@ public class Database {
         } catch (SQLException e) {
             throw new IllegalStateException("SQL Error", e);
         }
+    }
+    
+    public String[][] selectJoin(String table1, String table2, String[] columns) {
+        try (Connection connection = DriverManager.getConnection(url, username, password)){
+                Statement statement = connection.createStatement();
+                String query = String.format("SELECT %s FROM %s x JOIN %s y ON x.id_produto = y.id_produto;",String.join(",", columns), table1, table2);
+                ResultSet rs = statement.executeQuery(query);
+                ResultSetMetaData rsmd = rs.getMetaData();
+                
+                int numeroColunas = rsmd.getColumnCount();
+                int numeroLinhas = this.countAll(table1);
+                String[][] results = new String[numeroLinhas][numeroColunas + 1];
+
+                while(rs.next()){
+                    for(int i=1; i<=numeroColunas; i++){
+                        results[rs.getRow() - 1][i-1] = rs.getString(i);
+                    }
+                }
+            return results;
+        } 
+        catch (SQLException e) {
+            throw new IllegalStateException("SQL Error", e);
+        }
+    }
+    
+    public int getIdProduto(String nomeProduto){
+        try (Connection connection = DriverManager.getConnection(url, username, password)){
+            Statement statement = connection.createStatement();
+            String query = String.format("SELECT id_produto FROM produto WHERE nome = '%s'", nomeProduto);
+            ResultSet rs = statement.executeQuery(query);
+            
+            int idProduto = 0;
+            while(rs.next()){
+                idProduto = Integer.parseInt(rs.getString(1));
+            }
+            rs.close();
+            return idProduto;
+        }
+        catch (SQLException e) {
+            throw new IllegalStateException("SQL Error", e);
+        }        
     }
 }

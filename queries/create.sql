@@ -7,7 +7,6 @@ CREATE TABLE produto (
 	categoria varchar(60),
 	custo double,
 	preco double,
-	data_validade date,
 	PRIMARY KEY(id_produto)
 )
 
@@ -22,7 +21,7 @@ CREATE TABLE estoque (
 CREATE TABLE vendas (
 	id_venda int AUTO_INCREMENT,
 	nome varchar(60) NULL,
-	cpf int NULL,
+	cpf char(11) NULL,
 	id_produto int,
 	data_venda date,
 	PRIMARY KEY (id_venda),
