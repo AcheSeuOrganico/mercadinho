@@ -644,15 +644,18 @@ public class MainFrame extends javax.swing.JFrame {
                 String categoria = txtCategoriaProduto.getText();
                 String custo = txtCustoProduto.getText();
                 String preco = txtPrecoProduto.getText();
-                String dataValidade = quantidadeProdutoTxt.getText();    
+                String quantidade = quantidadeProdutoTxt.getText();  
 
                 name = String.format("'%s'", name);
                 categoria = String.format("'%s'", categoria);
-                dataValidade = String.format("'%s'", dataValidade);
                 
-                String[] parametros = {name, categoria, custo, preco, dataValidade};
-                db.updateValue("produto", parametros, id_produto);
+                String[] parametrosProduto = {name, categoria, custo, preco};
+                String[] parametrosEstoque = {id_produto, quantidade};
+                
+                db.updateValue("produto", parametrosProduto, id_produto);
+                db.updateValue("estoque", parametrosEstoque, id_produto);
                 JOptionPane.showMessageDialog(this, "Produto atualizado com sucesso");
+                setIdProdutos();
                 fetchAll();
             }
             catch(Exception e){
@@ -684,10 +687,11 @@ public class MainFrame extends javax.swing.JFrame {
     }//GEN-LAST:event_txtCustoProdutoActionPerformed
 
     private void botaoQueryProdutoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_botaoQueryProdutoActionPerformed
-        
+               
         String id = selectBoxIdProduto.getSelectedItem().toString();
         try (Connection connection = DriverManager.getConnection(db.url, db.username, db.password)){
-            String query = String.format("SELECT * FROM produto p JOIN estoque e p.id_produto = e.id_produto WHERE id_produto=%s", id);
+            String[] columns = {"x.id_produto","x.nome","x.categoria","x.custo","x.preco","y.quantidade",};
+            String query = String.format("SELECT %s FROM produto x JOIN estoque y ON y.id_produto = x.id_produto WHERE x.id_produto=%s", String.join(",", columns), id);
             System.out.println(query);
             Statement statement = connection.createStatement(); 
             ResultSet rs = statement.executeQuery(query);
@@ -814,23 +818,31 @@ public class MainFrame extends javax.swing.JFrame {
             String cpf = cpfClienteTxt.getText();
             
             String[] values = new String[this.carrinho.size()];
+            String[] quantidadeId = new String[this.carrinho.size()];
             
             for(int i = 0; i < this.carrinho.size(); i++){
                 String idProduto = this.carrinho.get(i)[0];
                 String quantidade = this.carrinho.get(i)[3];
                 String valorTotal = this.carrinho.get(i)[5];
-                values[i] = String.format("('%s', '%s', %s, %s, %s,  CURDATE())", nomeCliente, cpf, idProduto, quantidade, valorTotal); 
+                
+                values[i] = String.format("('%s', '%s', %s, %s, %s,  CURDATE())", nomeCliente, cpf, idProduto, quantidade, valorTotal);
+                quantidadeId[i] = String.format("%s, %s", quantidade, idProduto);
             }
             
             String parametros = String.join(",", values);            
             db.insertInto("vendas", parametros);
+            db.updateValue("estoque", quantidadeId, cpf);
             JOptionPane.showMessageDialog(this, "Compra cadastrada com sucesso");
-            df.setRowCount(0);
+            df.setRowCount(0);            
             nomeClienteTxt.setText("");
             cpfClienteTxt.setText("");
             this.carrinho.clear();
             updateTotalCarrinho();
-            updateTabelaVendas();            
+            updateTabelaVendas();        
+            
+            
+
+            
         }
         catch(Exception e){
             JOptionPane.showMessageDialog(this, "Não foi possivel realizar a transação");

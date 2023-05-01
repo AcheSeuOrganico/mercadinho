@@ -42,6 +42,7 @@ public class Database {
             }
                        
             String query = String.format("UPDATE %s %s WHERE id_produto = %s;", table, set, id);
+             System.out.println(query);
             Statement statement = connection.createStatement();
             statement.execute(query);
         }
