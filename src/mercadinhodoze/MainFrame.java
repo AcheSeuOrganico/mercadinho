@@ -21,10 +21,15 @@ public class MainFrame extends javax.swing.JFrame {
     public MainFrame() {
         Locale.setDefault(new Locale("en", "US"));
         initComponents();
-        setIdProdutos();
-        fetchAll();
-        updateQuantidades();
-        updateTabelaVendas();
+        try{
+            setIdProdutos();
+            fetchAll();
+            updateQuantidades();
+            updateTabelaVendas();
+        }catch(Exception e){
+            System.out.println("Erro ao consultar as tabelas " + e);
+        }
+        
     }
 
     
@@ -831,7 +836,7 @@ public class MainFrame extends javax.swing.JFrame {
             
             String parametros = String.join(",", values);            
             db.insertInto("vendas", parametros);
-            db.updateValue("estoque", quantidadeId, cpf);
+//            db.updateValue("estoque", quantidadeId, cpf);
             JOptionPane.showMessageDialog(this, "Compra cadastrada com sucesso");
             df.setRowCount(0);            
             nomeClienteTxt.setText("");

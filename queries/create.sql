@@ -23,6 +23,8 @@ CREATE TABLE vendas (
 	nome varchar(60) NULL,
 	cpf char(11) NULL,
 	id_produto int,
+	quantidade int,
+	valor_total double,
 	data_venda date,
 	PRIMARY KEY (id_venda),
 	FOREIGN KEY (id_produto) REFERENCES estoque(id_produto)
