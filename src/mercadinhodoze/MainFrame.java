@@ -773,7 +773,7 @@ public class MainFrame extends javax.swing.JFrame {
         String id_produto = idProdutoCarrinho.getSelectedItem().toString();
         String quantidade = quantidadeBox.getSelectedItem().toString();
         String[] parametros = {"id_produto", "nome", "categoria", "preco"};        
-        String[] produto = db.getProduto(parametros, Integer.parseInt(id_produto));
+        String[] produto = db.getOne("produto", parametros, Integer.parseInt(id_produto));
         double precoTotal = Double.parseDouble(produto[3]) * Double.parseDouble(quantidade);
         String[] produtoFormatado = {produto[0], produto[1], produto[2], quantidade, produto[3], String.format("%.2f", precoTotal)};
         this.carrinho.add(produtoFormatado);
@@ -822,8 +822,11 @@ public class MainFrame extends javax.swing.JFrame {
             String nomeCliente = nomeClienteTxt.getText();
             String cpf = cpfClienteTxt.getText();
             
-            String[] values = new String[this.carrinho.size()];
-            String[] quantidadeId = new String[this.carrinho.size()];
+            int numeroItensCarrinho = this.carrinho.size();
+            
+            String[] values = new String[numeroItensCarrinho];
+            String[] productsIds = new String[numeroItensCarrinho];
+            String[] productsValues = new String[numeroItensCarrinho];
             
             for(int i = 0; i < this.carrinho.size(); i++){
                 String idProduto = this.carrinho.get(i)[0];
@@ -831,12 +834,18 @@ public class MainFrame extends javax.swing.JFrame {
                 String valorTotal = this.carrinho.get(i)[5];
                 
                 values[i] = String.format("('%s', '%s', %s, %s, %s,  CURDATE())", nomeCliente, cpf, idProduto, quantidade, valorTotal);
-                quantidadeId[i] = String.format("%s, %s", quantidade, idProduto);
+                
+                String[] tableColumn = {"quantidade"};
+                String[] quantidadeEstoque = db.getOne("estoque", tableColumn, Integer.parseInt(idProduto));
+                
+                int novoValorEstoque = Integer.parseInt(quantidadeEstoque[0]) - Integer.parseInt(quantidade);
+                productsIds[i] = idProduto;
+                productsValues[i] = String.format("%d", novoValorEstoque);
             }
             
             String parametros = String.join(",", values);            
             db.insertInto("vendas", parametros);
-//            db.updateValue("estoque", quantidadeId, cpf);
+            db.updateRows("estoque", "quantidade", productsIds, productsValues);
             JOptionPane.showMessageDialog(this, "Compra cadastrada com sucesso");
             df.setRowCount(0);            
             nomeClienteTxt.setText("");
@@ -844,10 +853,7 @@ public class MainFrame extends javax.swing.JFrame {
             this.carrinho.clear();
             updateTotalCarrinho();
             updateTabelaVendas();        
-            
-            
-
-            
+            fetchAll();
         }
         catch(Exception e){
             JOptionPane.showMessageDialog(this, "Não foi possivel realizar a transação");

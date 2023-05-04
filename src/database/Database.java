@@ -9,8 +9,8 @@ import java.util.ArrayList;
 
 public class Database {
     public String url = "jdbc:mysql://localhost:3306/mercadinho";
-    public String username = "root";
-    public String password = "";
+    public String username = "andre";
+    public String password = "andre123";
     
     
     public boolean exists(String table, String column, String value){
@@ -42,7 +42,6 @@ public class Database {
             }
                        
             String query = String.format("UPDATE %s %s WHERE id_produto = %s;", table, set, id);
-             System.out.println(query);
             Statement statement = connection.createStatement();
             statement.execute(query);
         }
@@ -139,10 +138,10 @@ public class Database {
             throw new IllegalStateException("SQL Error", e);
         }
     }
-    public String[] getProduto(String[] columns, int id){
+    public String[] getOne(String table, String[] columns, int id){
         try (Connection connection = DriverManager.getConnection(url, username, password)){
             String columnsNames = String.join(",", columns);
-            String query = String.format("SELECT %s FROM produto WHERE id_produto=%s", columnsNames, id);
+            String query = String.format("SELECT %s FROM %s WHERE id_produto=%s", columnsNames, table, id);
             Statement statement = connection.createStatement(); 
             ResultSet rs = statement.executeQuery(query);
             String[] produto = new String[columns.length];
@@ -198,5 +197,26 @@ public class Database {
         catch (SQLException e) {
             throw new IllegalStateException("SQL Error", e);
         }        
+    }
+    
+    public void updateRows(String table, String targetColumn, String[] productsIds, String[] productsValues){
+        try (Connection connection = DriverManager.getConnection(url, username, password)){
+            String updateStatement = String.format("UPDATE %s", table);
+            String setStatement = String.format("SET %s", targetColumn);
+            String whereStatement = String.format("WHERE id_produto IN (%s)", String.join(", ", productsIds));
+            
+            String whenStatements = "";
+            for(int i = 0; i < productsValues.length; i++){
+                String when = String.format("WHEN id_produto = %s THEN %s ", productsIds[i], productsValues[i]);
+                whenStatements = whenStatements + when;
+            }
+            
+            Statement statement = connection.createStatement();
+            String query = String.format("%s %s = CASE %s ELSE %s END %s;", updateStatement, setStatement, whenStatements, targetColumn, whereStatement);
+            statement.execute(query);
+        }
+        catch (SQLException e) {
+            throw new IllegalStateException("SQL Error", e);
+        }   
     }
 }
