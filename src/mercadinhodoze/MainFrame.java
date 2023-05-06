@@ -23,9 +23,9 @@ public class MainFrame extends javax.swing.JFrame {
         initComponents();
         try{
             setIdProdutos();
-            fetchAll();
+            fetchAll("");
             updateQuantidades();
-            updateTabelaVendas();
+            updateTabelaVendas("");
         }catch(Exception e){
             System.out.println("Erro ao consultar as tabelas " + e);
         }
@@ -46,10 +46,10 @@ public class MainFrame extends javax.swing.JFrame {
         jLabel6 = new javax.swing.JLabel();
         jLabel7 = new javax.swing.JLabel();
         atualizarProduto = new javax.swing.JButton();
-        botaoBuscarTabelaVendaProduto = new javax.swing.JButton();
+        botaoBuscarTabelaProduto = new javax.swing.JButton();
         jScrollPane2 = new javax.swing.JScrollPane();
         tabelaCarrinho = new javax.swing.JTable();
-        jTextField6 = new javax.swing.JTextField();
+        barraBuscaProduto = new javax.swing.JTextField();
         botaoComprar = new javax.swing.JButton();
         botaoAdicionarCarrinho = new javax.swing.JButton();
         jLabel10 = new javax.swing.JLabel();
@@ -61,8 +61,8 @@ public class MainFrame extends javax.swing.JFrame {
         jLabel11 = new javax.swing.JLabel();
         jScrollPane3 = new javax.swing.JScrollPane();
         tabelaVendas = new javax.swing.JTable();
-        botaoBuscarTabelaVendaProduto1 = new javax.swing.JButton();
-        jTextField7 = new javax.swing.JTextField();
+        botaoBuscarTabelaVenda = new javax.swing.JButton();
+        barraBuscarTabelaVenda = new javax.swing.JTextField();
         selectIdProdutoDelete = new javax.swing.JComboBox<>();
         apagarProduto = new javax.swing.JButton();
         inserirButton = new javax.swing.JButton();
@@ -148,10 +148,10 @@ public class MainFrame extends javax.swing.JFrame {
             }
         });
 
-        botaoBuscarTabelaVendaProduto.setText("Buscar");
-        botaoBuscarTabelaVendaProduto.addActionListener(new java.awt.event.ActionListener() {
+        botaoBuscarTabelaProduto.setText("Buscar");
+        botaoBuscarTabelaProduto.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                botaoBuscarTabelaVendaProdutoActionPerformed(evt);
+                botaoBuscarTabelaProdutoActionPerformed(evt);
             }
         });
 
@@ -180,9 +180,9 @@ public class MainFrame extends javax.swing.JFrame {
         });
         jScrollPane2.setViewportView(tabelaCarrinho);
 
-        jTextField6.addActionListener(new java.awt.event.ActionListener() {
+        barraBuscaProduto.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jTextField6ActionPerformed(evt);
+                barraBuscaProdutoActionPerformed(evt);
             }
         });
 
@@ -272,16 +272,16 @@ public class MainFrame extends javax.swing.JFrame {
         });
         jScrollPane3.setViewportView(tabelaVendas);
 
-        botaoBuscarTabelaVendaProduto1.setText("Buscar");
-        botaoBuscarTabelaVendaProduto1.addActionListener(new java.awt.event.ActionListener() {
+        botaoBuscarTabelaVenda.setText("Buscar");
+        botaoBuscarTabelaVenda.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                botaoBuscarTabelaVendaProduto1ActionPerformed(evt);
+                botaoBuscarTabelaVendaActionPerformed(evt);
             }
         });
 
-        jTextField7.addActionListener(new java.awt.event.ActionListener() {
+        barraBuscarTabelaVenda.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jTextField7ActionPerformed(evt);
+                barraBuscarTabelaVendaActionPerformed(evt);
             }
         });
 
@@ -376,9 +376,9 @@ public class MainFrame extends javax.swing.JFrame {
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addGroup(layout.createSequentialGroup()
-                                .addComponent(botaoBuscarTabelaVendaProduto1)
+                                .addComponent(botaoBuscarTabelaVenda)
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(jTextField7, javax.swing.GroupLayout.PREFERRED_SIZE, 169, javax.swing.GroupLayout.PREFERRED_SIZE))
+                                .addComponent(barraBuscarTabelaVenda, javax.swing.GroupLayout.PREFERRED_SIZE, 169, javax.swing.GroupLayout.PREFERRED_SIZE))
                             .addComponent(jScrollPane3, javax.swing.GroupLayout.PREFERRED_SIZE, 600, javax.swing.GroupLayout.PREFERRED_SIZE))
                         .addContainerGap(23, Short.MAX_VALUE))
                     .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
@@ -388,9 +388,9 @@ public class MainFrame extends javax.swing.JFrame {
                                     .addComponent(jLabel7)
                                     .addGroup(layout.createSequentialGroup()
                                         .addGap(13, 13, 13)
-                                        .addComponent(botaoBuscarTabelaVendaProduto)
+                                        .addComponent(botaoBuscarTabelaProduto)
                                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                        .addComponent(jTextField6, javax.swing.GroupLayout.PREFERRED_SIZE, 169, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                                        .addComponent(barraBuscaProduto, javax.swing.GroupLayout.PREFERRED_SIZE, 169, javax.swing.GroupLayout.PREFERRED_SIZE)))
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
                                     .addComponent(botaoComprar)
@@ -442,25 +442,22 @@ public class MainFrame extends javax.swing.JFrame {
                                 .addComponent(totalCarrinho, javax.swing.GroupLayout.PREFERRED_SIZE, 217, javax.swing.GroupLayout.PREFERRED_SIZE)
                                 .addGap(294, 294, 294)
                                 .addComponent(jLabel8))
+                            .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 547, javax.swing.GroupLayout.PREFERRED_SIZE)
                             .addGroup(layout.createSequentialGroup()
-                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                                    .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 547, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                    .addComponent(idProdutoCarrinho, javax.swing.GroupLayout.PREFERRED_SIZE, 102, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                    .addComponent(jLabel14))
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                    .addComponent(jLabel15)
                                     .addGroup(layout.createSequentialGroup()
-                                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                            .addComponent(idProdutoCarrinho, javax.swing.GroupLayout.PREFERRED_SIZE, 102, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                            .addComponent(jLabel14))
+                                        .addComponent(quantidadeBox, javax.swing.GroupLayout.PREFERRED_SIZE, 113, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                                        .addComponent(botaoAdicionarCarrinho)
                                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                            .addComponent(jLabel15)
-                                            .addGroup(layout.createSequentialGroup()
-                                                .addComponent(quantidadeBox, javax.swing.GroupLayout.PREFERRED_SIZE, 113, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                                                .addComponent(botaoAdicionarCarrinho)
-                                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                                .addComponent(botaoRemover)
-                                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                                .addComponent(botaoLimparCarrinho)))))
-                                .addContainerGap())))))
+                                        .addComponent(botaoRemover)
+                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                        .addComponent(botaoLimparCarrinho))))))))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -507,10 +504,10 @@ public class MainFrame extends javax.swing.JFrame {
                             .addComponent(apagarProduto))
                         .addGap(44, 44, 44)
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                            .addComponent(botaoBuscarTabelaVendaProduto)
-                            .addComponent(jTextField6, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(botaoBuscarTabelaVendaProduto1)
-                            .addComponent(jTextField7, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                            .addComponent(botaoBuscarTabelaProduto)
+                            .addComponent(barraBuscaProduto, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(botaoBuscarTabelaVenda)
+                            .addComponent(barraBuscarTabelaVenda, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
                     .addGroup(layout.createSequentialGroup()
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addGroup(layout.createSequentialGroup()
@@ -547,7 +544,6 @@ public class MainFrame extends javax.swing.JFrame {
                                 .addGap(4, 4, 4)
                                 .addComponent(quantidadeProdutoTxt, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
                         .addGap(0, 0, Short.MAX_VALUE)))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 371, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(jScrollPane3, javax.swing.GroupLayout.PREFERRED_SIZE, 371, javax.swing.GroupLayout.PREFERRED_SIZE))
@@ -571,9 +567,9 @@ public class MainFrame extends javax.swing.JFrame {
         }
     }
     
-    public void updateTabelaVendas(){
+    public void updateTabelaVendas(String query){
         String[] columns = {"x.id_venda","x.nome", "y.nome", "x.quantidade","x.valor_total","x.data_venda",};
-        String[][] produtos = db.selectJoin("vendas", "produto", columns);
+        String[][] produtos = db.selectJoin("vendas", "produto", columns, query);
         
         DefaultTableModel df = (DefaultTableModel)tabelaVendas.getModel();
         df.setRowCount(0);
@@ -612,9 +608,9 @@ public class MainFrame extends javax.swing.JFrame {
         quantidadeProdutoTxt.setText("");
     }
     
-    public void fetchAll(){
+    public void fetchAll(String query){
         String[] columns = {"x.id_produto","x.nome","x.categoria","x.custo","x.preco","y.quantidade",};
-        String[][] produtos = db.selectJoin("produto", "estoque", columns);
+        String[][] produtos = db.selectJoin("produto", "estoque", columns, query);
         
         DefaultTableModel df = (DefaultTableModel)tabelaProdutoVendas.getModel();
         df.setRowCount(0);
@@ -661,7 +657,7 @@ public class MainFrame extends javax.swing.JFrame {
                 db.updateValue("estoque", parametrosEstoque, id_produto);
                 JOptionPane.showMessageDialog(this, "Produto atualizado com sucesso");
                 setIdProdutos();
-                fetchAll();
+                fetchAll("");
             }
             catch(Exception e){
                 JOptionPane.showMessageDialog(this, "Houve um erro para atualizar o produto");
@@ -669,15 +665,16 @@ public class MainFrame extends javax.swing.JFrame {
             
     }//GEN-LAST:event_atualizarProdutoActionPerformed
 
-    private void jTextField6ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jTextField6ActionPerformed
+    private void barraBuscaProdutoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_barraBuscaProdutoActionPerformed
         // TODO add your handling code here:
-    }//GEN-LAST:event_jTextField6ActionPerformed
+    }//GEN-LAST:event_barraBuscaProdutoActionPerformed
 
-    private void botaoBuscarTabelaVendaProdutoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_botaoBuscarTabelaVendaProdutoActionPerformed
+    private void botaoBuscarTabelaProdutoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_botaoBuscarTabelaProdutoActionPerformed
 
-        fetchAll();
+        String busca = barraBuscaProduto.getText();
+        fetchAll(busca);
         
-    }//GEN-LAST:event_botaoBuscarTabelaVendaProdutoActionPerformed
+    }//GEN-LAST:event_botaoBuscarTabelaProdutoActionPerformed
 
     private void txtCategoriaProdutoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtCategoriaProdutoActionPerformed
         // TODO add your handling code here:
@@ -697,7 +694,6 @@ public class MainFrame extends javax.swing.JFrame {
         try (Connection connection = DriverManager.getConnection(db.url, db.username, db.password)){
             String[] columns = {"x.id_produto","x.nome","x.categoria","x.custo","x.preco","y.quantidade",};
             String query = String.format("SELECT %s FROM produto x JOIN estoque y ON y.id_produto = x.id_produto WHERE x.id_produto=%s", String.join(",", columns), id);
-            System.out.println(query);
             Statement statement = connection.createStatement(); 
             ResultSet rs = statement.executeQuery(query);
             
@@ -718,20 +714,21 @@ public class MainFrame extends javax.swing.JFrame {
 
     }//GEN-LAST:event_botaoQueryProdutoActionPerformed
 
-    private void botaoBuscarTabelaVendaProduto1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_botaoBuscarTabelaVendaProduto1ActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_botaoBuscarTabelaVendaProduto1ActionPerformed
+    private void botaoBuscarTabelaVendaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_botaoBuscarTabelaVendaActionPerformed
+        String query = barraBuscarTabelaVenda.getText();
+        updateTabelaVendas(query);
+    }//GEN-LAST:event_botaoBuscarTabelaVendaActionPerformed
 
-    private void jTextField7ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jTextField7ActionPerformed
+    private void barraBuscarTabelaVendaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_barraBuscarTabelaVendaActionPerformed
         // TODO add your handling code here:
-    }//GEN-LAST:event_jTextField7ActionPerformed
+    }//GEN-LAST:event_barraBuscarTabelaVendaActionPerformed
 
     private void apagarProdutoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_apagarProdutoActionPerformed
         
         try{
             String id_produto = selectIdProdutoDelete.getSelectedItem().toString();
             db.deleteRow("produto", Integer.parseInt(id_produto));
-            fetchAll();
+            fetchAll("");
             setIdProdutos();
         }
         catch(Exception e){
@@ -757,7 +754,7 @@ public class MainFrame extends javax.swing.JFrame {
             db.insertInto("estoque", String.format("(%s, %s)", idProduto, quantidadeProduto));
             JOptionPane.showMessageDialog(this, "Produto salvo com sucesso");
             setIdProdutos();
-            fetchAll();
+            fetchAll("");
         }
         catch(Exception e){
             JOptionPane.showMessageDialog(this, "Houve um erro para cadastrar o produto");
@@ -839,6 +836,12 @@ public class MainFrame extends javax.swing.JFrame {
                 String[] quantidadeEstoque = db.getOne("estoque", tableColumn, Integer.parseInt(idProduto));
                 
                 int novoValorEstoque = Integer.parseInt(quantidadeEstoque[0]) - Integer.parseInt(quantidade);
+                
+                if(novoValorEstoque < 0){
+                    JOptionPane.showMessageDialog(this, "Quantidade insuficiente no estoque");
+                    throw new Exception();
+                }
+                
                 productsIds[i] = idProduto;
                 productsValues[i] = String.format("%d", novoValorEstoque);
             }
@@ -852,8 +855,8 @@ public class MainFrame extends javax.swing.JFrame {
             cpfClienteTxt.setText("");
             this.carrinho.clear();
             updateTotalCarrinho();
-            updateTabelaVendas();        
-            fetchAll();
+            updateTabelaVendas("");        
+            fetchAll("");
         }
         catch(Exception e){
             JOptionPane.showMessageDialog(this, "Não foi possivel realizar a transação");
@@ -913,9 +916,11 @@ public class MainFrame extends javax.swing.JFrame {
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton apagarProduto;
     private javax.swing.JButton atualizarProduto;
+    private javax.swing.JTextField barraBuscaProduto;
+    private javax.swing.JTextField barraBuscarTabelaVenda;
     private javax.swing.JButton botaoAdicionarCarrinho;
-    private javax.swing.JButton botaoBuscarTabelaVendaProduto;
-    private javax.swing.JButton botaoBuscarTabelaVendaProduto1;
+    private javax.swing.JButton botaoBuscarTabelaProduto;
+    private javax.swing.JButton botaoBuscarTabelaVenda;
     private javax.swing.JButton botaoComprar;
     private javax.swing.JButton botaoLimparCarrinho;
     private javax.swing.JButton botaoQueryProduto;
@@ -942,8 +947,6 @@ public class MainFrame extends javax.swing.JFrame {
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JScrollPane jScrollPane2;
     private javax.swing.JScrollPane jScrollPane3;
-    private javax.swing.JTextField jTextField6;
-    private javax.swing.JTextField jTextField7;
     private javax.swing.JTextField nomeClienteTxt;
     private javax.swing.JComboBox<String> quantidadeBox;
     private javax.swing.JTextField quantidadeProdutoTxt;

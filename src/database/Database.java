@@ -9,8 +9,8 @@ import java.util.ArrayList;
 
 public class Database {
     public String url = "jdbc:mysql://localhost:3306/mercadinho";
-    public String username = "andre";
-    public String password = "andre123";
+    public String username = "root";
+    public String password = "";
     
     
     public boolean exists(String table, String column, String value){
@@ -158,22 +158,34 @@ public class Database {
         }
     }
     
-    public String[][] selectJoin(String table1, String table2, String[] columns) {
+    public String[][] selectJoin(String table1, String table2, String[] columns, String where) {
         try (Connection connection = DriverManager.getConnection(url, username, password)){
-                Statement statement = connection.createStatement();
-                String query = String.format("SELECT %s FROM %s x JOIN %s y ON x.id_produto = y.id_produto;",String.join(",", columns), table1, table2);
-                ResultSet rs = statement.executeQuery(query);
-                ResultSetMetaData rsmd = rs.getMetaData();
-                
-                int numeroColunas = rsmd.getColumnCount();
-                int numeroLinhas = this.countAll(table1);
-                String[][] results = new String[numeroLinhas][numeroColunas + 1];
-
-                while(rs.next()){
-                    for(int i=1; i<=numeroColunas; i++){
-                        results[rs.getRow() - 1][i-1] = rs.getString(i);
+            String whereStatement = "";
+            if(!where.equalsIgnoreCase("")){
+                for(int i = 0; i < columns.length; i++){
+                    if(i == 0){
+                        whereStatement = whereStatement + String.format("WHERE %s LIKE ", columns[i]) + "'%" + where + "%'";
+                    }
+                    else{
+                        whereStatement = whereStatement + " OR " + String.format("%s LIKE ", columns[i]) + "'%" + where + "%'";
                     }
                 }
+            }               
+            
+            Statement statement = connection.createStatement();
+            String query = String.format("SELECT %s FROM %s x JOIN %s y ON x.id_produto = y.id_produto %s;",String.join(",", columns), table1, table2, whereStatement);
+            ResultSet rs = statement.executeQuery(query);
+            ResultSetMetaData rsmd = rs.getMetaData();
+
+            int numeroColunas = rsmd.getColumnCount();
+            int numeroLinhas = this.countAll(table1);
+            String[][] results = new String[numeroLinhas][numeroColunas + 1];
+
+            while(rs.next()){
+                for(int i=1; i<=numeroColunas; i++){
+                    results[rs.getRow() - 1][i-1] = rs.getString(i);
+                }
+            }
             return results;
         } 
         catch (SQLException e) {
